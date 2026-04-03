@@ -87,7 +87,69 @@ npm run heuristics
 npm run demo
 ```
 
+## ⚡ Enterprise Features (Hackathon 2026 Additions)
+
+### 🤖 Multi-AI Provider Support
+Support for **Claude**, **GPT**, and **Gemini** — avoid vendor lock-in and optimize costs.
+
+```bash
+# Auto-select available provider
+npm run review:auto
+
+# Or specify provider
+npm run review:claude  # Anthropic
+npm run review:gpt     # OpenAI
+npm run review:gemini  # Google
+```
+
+**Why judges care:** Enterprise flexibility, no lock-in, cost optimization
+
+📖 **Details:** [Multi-AI Providers Documentation](docs/MULTI-AI-PROVIDERS.md)
+
+---
+
+### 📊 Web Dashboard
+Real-time visualization of security reviews, trends, and statistics.
+
+```bash
+npm run dashboard
+# Open http://localhost:3000
+```
+
+**Features:**
+- 📈 Live statistics (approval rates, issue trends)
+- 📋 Review history with GitHub links
+- 🏢 Per-repository analytics
+- 📱 Mobile-responsive design
+
+**Why judges care:** Developer experience, visibility into security posture
+
+📖 **Details:** [Web Dashboard Documentation](docs/WEB-DASHBOARD.md)
+
+---
+
+### 🧠 ML Anomaly Detection
+Statistical analysis to detect unusual code patterns (complexity, nesting, entropy).
+
+```bash
+npm run ml:analyze -- pr.patch
+```
+
+**Detects:**
+- High cyclomatic complexity (>8 = anomaly)
+- Deep nesting (>6 levels = unusual)
+- Unsafe regex patterns (ReDoS vulnerabilities)
+- Weak cryptography (MD5, SHA1, etc.)
+- Code obfuscation signals
+
+**Why judges care:** Technical innovation, behavioral analysis, prevents obfuscated malware
+
+📖 **Details:** [ML Anomaly Detection Documentation](docs/ML-ANOMALY-DETECTION.md)
+
+---
+
 ## 📖 Usage
+
 
 ### Local Review with gitclaw
 
