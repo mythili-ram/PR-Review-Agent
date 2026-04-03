@@ -32,6 +32,22 @@ npm run demo
 
 **That's it.** Check `docs/examples/REVIEW.md` for sample output.
 
+### 🎬 **GitHub Actions Demo**
+
+See it work in CI/CD - **[GITHUB-ACTIONS-DEMO.md](./GITHUB-ACTIONS-DEMO.md)**
+
+**Two ways to demo:**
+
+1. **Auto PR Review** - Create test PR → Agent reviews automatically in 10 seconds
+2. **Manual Trigger** - Click "Run workflow" → Full demo in 30 seconds
+
+**What judges will see:**
+
+- ⚡ 0.1s vulnerability detection
+- 🧠 Git-native memory in action
+- 🔄 Self-improvement explanation
+- 🚫 Automatic PR blocking on critical issues
+
 ### 🏆 **What Makes This Different**
 
 Not just another PR bot — this agent **learns from YOUR git history**:
@@ -99,8 +115,8 @@ Verdict: REQUEST_CHANGES
 ### Installation
 
 ```bash
-git clone https://github.com/your-org/pr-review-agent.git
-cd pr-review-agent
+git clone https://github.com/mythili-ram/PR-Review-Agent.git
+cd PR-Review-Agent
 npm install
 npm run validate  # Validate agent structure
 ```
@@ -141,7 +157,6 @@ npm run demo
 Copy-Item .env.example .env
 # Edit .env and set ANTHROPIC_API_KEY=... from https://console.anthropic.com/
 npm install
-npm run gitclaw:help
 ```
 
 Alternatively set the variable for one session:
@@ -290,4 +305,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-**Made for the GitAgent Hackathon 2025** | [View Demo](./DEMO.md) | [See Examples](./docs/examples/)
+**Made for the GitAgent Hackathon 2026** | [View Demo](./DEMO.md) | [Judge Guide](./JUDGE-PITCH.md) | [GitHub Actions Demo](./GITHUB-ACTIONS-DEMO.md)
