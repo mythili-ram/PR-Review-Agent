@@ -60,25 +60,15 @@ jobs:
         run: |
           CRITICAL_COUNT=$(jq -r '.stats.critical // 0' heuristic-results.json)
           VERDICT=$(jq -r '.verdict // "APPROVE"' heuristic-results.json)
-          
-          # For demo/hackathon PRs: allow REQUEST_CHANGES if issues are patterns in feature code
-          # Fail only on emergency-level issues (> 3 critical OR actual secrets/keys)
-          if [ "$CRITICAL_COUNT" -gt 3 ]; then
+
+          # Block on ANY critical issues (changed from > 3 to >= 1)
+          if [ "$CRITICAL_COUNT" -ge 1 ]; then
             echo "::error::Found $CRITICAL_COUNT critical security issue(s)"
+            echo "::error::Cannot merge PR with critical vulnerabilities"
+            jq -r '.findings[] | select(.severity == "CRITICAL") | "  - \(.rule_id): \(.message)"' heuristic-results.json
             exit 1
           fi
-          
-          # Check for actual secrets (these always fail)
-          if jq -e '.findings[]? | select(.rule_id == "secret-exposure")' heuristic-results.json > /dev/null 2>&1; then
-            # Only fail if it's an actual secret with specific patterns
-            SECRET_FINDING=$(jq -r '.findings[]? | select(.rule_id == "secret-exposure") | .message' heuristic-results.json | head -1)
-            if [[ "$SECRET_FINDING" == *"API key"* ]] || [[ "$SECRET_FINDING" == *"token"* ]] || [[ "$SECRET_FINDING" == *"Private key"* ]]; then
-              echo "::error::SECRETS EXPOSURE DETECTED: $SECRET_FINDING"
-              echo "::error::Cannot merge PR with exposed credentials"
-              exit 1
-            fi
-          fi
-          
+
           echo "✅ Security scan passed (verdict: $VERDICT)"
           echo "  - Critical: $CRITICAL_COUNT"
 
@@ -162,15 +152,14 @@ jobs:
 
       - name: Block PR if critical issues found
         run: |
-          # This PR adds new features (dashboard, ML, multi-AI providers) with demo fixtures
-          # The heuristics scan finds expected patterns in test code - don't block on these
-          # Post review as comment for visibility but allow merge
-          
+          # Check for critical issues in the review
           if grep -q "CRITICAL" REVIEW.md; then
-            echo "::notice::Security findings posted in review comment - please review"
-            # Don't exit 1 - allow merge. This is a feature PR with intentional test patterns.
+            echo "::error::CRITICAL security issues found in review"
+            echo "::error::This PR cannot be merged until issues are resolved"
+            echo ""
+            echo "Review details posted in PR comments"
+            exit 1
           else
             echo "✅ No critical issues found"
+            echo "✅ PR ready to merge - review available in comments"
           fi
-          
-          echo "✅ PR ready to merge - review available in comments"
