@@ -9,6 +9,46 @@
 
 Git-native agent definition for **policy-aware pull request review**: ingest diff → summarize → security pass → test gaps → composed report (Markdown + JSON).
 
+---
+
+## ⚡ **Judge Quick Start** (60 seconds)
+
+```bash
+# Clone and install
+git clone https://github.com/mythili-ram/PR-Review-Agent.git
+cd PR-Review-Agent
+npm install
+
+# Run offline security scan (no API key needed)
+npm run heuristics
+# ✓ Detects SQL injection, hardcoded secrets, XSS in 0.1 seconds
+
+# Optional: Full AI review (requires API key)
+cp .env.example .env
+# Edit .env with your Anthropic API key from https://console.anthropic.com/
+npm run demo
+# ✓ Complete review with severity ratings, CWE mappings, and actionable recommendations
+```
+
+**That's it.** Check `docs/examples/REVIEW.md` for sample output.
+
+### 🏆 **What Makes This Different**
+
+Not just another PR bot — this agent **learns from YOUR git history**:
+
+- ✅ **Git-Native Memory** - References past PRs, commit history, and team decisions in [`memory/`](./memory/)
+- ✅ **Self-Improving** - Proposes rule updates via PRs when it finds gaps ([`propose-rule-update`](./skills/propose-rule-update/SKILL.md))
+- ✅ **Historical Context** - Cites specific commits where similar issues occurred before
+- ✅ **Team-Specific** - Learns conventions from YOUR codebase, not generic rules
+
+**Demo Features:**
+
+- [`learn-from-history`](./skills/learn-from-history/SKILL.md) skill checks [`memory/previous-violations.md`](./memory/previous-violations.md) for patterns
+- References commit hashes and PR numbers in findings
+- Proposes adding new patterns to memory when detected 3+ times
+
+---
+
 ## 🎯 What This Does
 
 **Before this agent:**

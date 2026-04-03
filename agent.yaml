@@ -29,10 +29,12 @@ model:
       api_key_env: GOOGLE_API_KEY
 skills:
   - ingest-pr
+  - learn-from-history  # NEW: Git-native memory using past PRs and decisions
   - summarize-diff
   - security-pass
   - tests-and-risk
   - compose-review
+  - propose-rule-update  # META: Self-improvement - proposes rule updates when gaps detected
 tools:
   - read-diff-context
   - write-review-artifact
