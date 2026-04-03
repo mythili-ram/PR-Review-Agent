@@ -6,14 +6,27 @@ author: hackathon
 license: MIT
 # gitclaw expects "provider:model" — see https://github.com/open-gitagent/gitclaw
 model:
-  preferred: anthropic:claude-sonnet-4-5-20250929
+  provider: claude # Options: claude, gpt, gemini
+  preferred: anthropic:claude-opus-4-1-20250805
   fallback:
-    - anthropic:claude-haiku-4-5-20251001
-    - openai:gpt-4.1
+    - anthropic:claude-sonnet-4-5-20250929
+    - openai:gpt-4o
+    - google:gemini-2.0-flash
   constraints:
     temperature: 0.2
     max_tokens: 8192
     top_p: 0.9
+  # Provider-specific settings
+  providers:
+    claude:
+      model: claude-opus-4-1-20250805
+      api_key_env: ANTHROPIC_API_KEY
+    gpt:
+      model: gpt-4o
+      api_key_env: OPENAI_API_KEY
+    gemini:
+      model: gemini-2.0-flash
+      api_key_env: GOOGLE_API_KEY
 skills:
   - ingest-pr
   - summarize-diff
