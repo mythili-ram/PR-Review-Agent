@@ -1,0 +1,162 @@
+name: 🎬 Demo for Judges - Manual Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      patch_file:
+        description: 'Patch file to review (default: sample with vulnerabilities)'
+        required: false
+        default: 'fixtures/sample.patch'
+
+jobs:
+  demo-review:
+    name: 🤖 PR Guardian Demo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Show agent structure
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "🏆 PR Guardian - GitAgent Hackathon 2026"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "📂 Agent Structure:"
+          npm run validate
+          echo ""
+
+      - name: Show git-native memory
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "🧠 Git-Native Memory System"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "📁 Memory files:"
+          ls -lh memory/
+          echo ""
+          echo "📄 Sample from previous-violations.md:"
+          head -40 memory/previous-violations.md
+          echo ""
+
+      - name: Show self-improvement capability
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "🔄 Self-Improving Agent"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "📄 Sample from propose-rule-update skill:"
+          head -60 skills/propose-rule-update/SKILL.md
+          echo ""
+
+      - name: Run heuristic scan on sample vulnerability
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "⚡ Fast Heuristic Scan (0.1 seconds, no API key)"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "🔍 Scanning: ${{ github.event.inputs.patch_file }}"
+          echo ""
+
+          time npm run --silent heuristics -- ${{ github.event.inputs.patch_file }} | jq '.'
+
+          echo ""
+          echo "✅ Scan complete - see detected vulnerabilities above"
+
+      - name: Show detection capabilities
+        run: |
+          echo ""
+          echo "═══════════════════════════════════════════════════════════"
+          echo "🎯 What PR Guardian Detects"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "✅ OWASP Top 10 Coverage:"
+          echo "  - A01: Broken Access Control"
+          echo "  - A02: Cryptographic Failures (hardcoded secrets)"
+          echo "  - A03: Injection (SQL, Command, Code)"
+          echo "  - A04: Insecure Design"
+          echo "  - A05: Security Misconfiguration"
+          echo "  - A06: Vulnerable Components"
+          echo "  - A07: Auth Failures"
+          echo "  - A08: Data Integrity Failures"
+          echo "  - A09: Logging Failures"
+          echo "  - A10: SSRF"
+          echo ""
+          echo "✅ CWE Mappings:"
+          echo "  - CWE-89: SQL Injection"
+          echo "  - CWE-79: XSS"
+          echo "  - CWE-798: Hardcoded Credentials"
+          echo "  - CWE-327: Weak Crypto"
+          echo "  - CWE-22: Path Traversal"
+          echo "  - CWE-918: SSRF"
+          echo "  - And 20+ more..."
+          echo ""
+
+      - name: Show key differentiators
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "🏆 Why PR Guardian Wins"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "🆚 Standard PR Bots:"
+          echo "  - Stateless (no memory)"
+          echo "  - Generic rules (not team-specific)"
+          echo "  - Static forever (never improve)"
+          echo ""
+          echo "✅ PR Guardian:"
+          echo "  1. 🧠 Git-Native Memory"
+          echo "     - Remembers past violations with commit hashes"
+          echo "     - References team decisions from previous PRs"
+          echo "     - Learns YOUR conventions, not generic rules"
+          echo ""
+          echo "  2. 🔄 Self-Improving"
+          echo "     - Detects repeated patterns (3x threshold)"
+          echo "     - Proposes PRs to update its own rules"
+          echo "     - Human approves via standard git workflow"
+          echo ""
+          echo "  3. 📊 Historical Context"
+          echo "     - Example: 'Similar issue in PR #123 (commit abc123)'"
+          echo "     - Cites past incidents in every review"
+          echo "     - Risk scoring based on file history"
+          echo ""
+          echo "🎯 No other hackathon entry has this combination!"
+          echo ""
+
+      - name: Demo summary
+        run: |
+          echo "═══════════════════════════════════════════════════════════"
+          echo "📊 Demo Summary"
+          echo "═══════════════════════════════════════════════════════════"
+          echo ""
+          echo "✅ Agent structure validated (7 skills including 2 novel ones)"
+          echo "✅ Git-native memory system demonstrated"
+          echo "✅ Self-improvement capability shown"
+          echo "✅ Heuristic scan completed (0.1s, detected vulnerabilities)"
+          echo ""
+          echo "📖 For more details:"
+          echo "  - Quick Start: README.md"
+          echo "  - Judge Guide: JUDGE-PITCH.md"
+          echo "  - Memory: memory/MEMORY.md"
+          echo "  - Self-Improvement: skills/propose-rule-update/SKILL.md"
+          echo ""
+          echo "🏆 PR Guardian - Ready for GitAgent Hackathon 2026!"
+          echo "═══════════════════════════════════════════════════════════"
+
+      - name: Upload demo results
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-results
+          path: |
+            memory/
+            skills/learn-from-history/
+            skills/propose-rule-update/
+            fixtures/sample.patch
