@@ -60,9 +60,6 @@ markdown += `### How to Fix
 3. For warnings and suggestions, consider best practices
 4. Commit and push your changes
 5. This review will update automatically
-
----
-*Powered by pr-review-agent | Model: anthropic:claude-sonnet-4-5 | Review ID: ${process.env.GITHUB_RUN_ID || 'N/A'}*
 `;
 
 console.log(markdown);
