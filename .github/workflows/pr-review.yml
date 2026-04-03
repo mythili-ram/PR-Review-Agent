@@ -135,6 +135,9 @@ jobs:
       - name: Block PR if critical issues found
         run: |
           if grep -q "CRITICAL" REVIEW.md; then
-            echo "::error::Critical security issues found - PR blocked until resolved. See review comment for details."
+            echo "::error::🔴 CRITICAL ISSUES FOUND - PR BLOCKED"
+            echo "::error::Critical security issues must be resolved before merge."
+            echo "::error::See review comment above for details."
             exit 1
           fi
+          echo "✅ No critical issues - PR can be merged"
