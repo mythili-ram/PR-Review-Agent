@@ -38,12 +38,12 @@ jobs:
       - name: ⚡ Run Heuristic Scan - ${{ matrix.fixture }}
         run: |
           echo "Analyzing: ${{ matrix.fixture }}"
-          npm run heuristics -- fixtures/${{ matrix.fixture }} > results-${{ matrix.fixture }}.json
+          npm run --silent heuristics -- fixtures/${{ matrix.fixture }} > results-${{ matrix.fixture }}.json
           cat results-${{ matrix.fixture }}.json
 
       - name: 🧠 Run ML Analysis - ${{ matrix.fixture }}
         run: |
-          npm run ml:analyze -- fixtures/${{ matrix.fixture }} > ml-${{ matrix.fixture }}.json
+          npm run --silent ml:analyze -- fixtures/${{ matrix.fixture }} > ml-${{ matrix.fixture }}.json
           cat ml-${{ matrix.fixture }}.json
 
       - name: 📊 Summary - ${{ matrix.fixture }}

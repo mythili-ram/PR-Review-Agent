@@ -51,7 +51,8 @@ jobs:
           echo "  • OWASP Top 10 coverage"
           echo "  • Zero API calls (completely offline)"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          npm run heuristics -- fixtures/${{ inputs.fixture }} | tee heuristic-results.json
+          npm run --silent heuristics -- fixtures/${{ inputs.fixture }} > heuristic-results.json
+          cat heuristic-results.json
           echo ""
 
           # Extract key metrics
@@ -73,7 +74,8 @@ jobs:
           echo "  • Complexity metrics"
           echo "  • Code entropy analysis"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          npm run ml:analyze -- fixtures/${{ inputs.fixture }} | tee ml-results.json
+          npm run --silent ml:analyze -- fixtures/${{ inputs.fixture }} > ml-results.json
+          cat ml-results.json
           echo ""
 
       - name: 📊 Step 4 - Generate Summary Report
