@@ -1,0 +1,25 @@
+{
+  "name": "pr-review-agent",
+  "version": "0.1.0",
+  "description": "GitAgent definition: policy-aware PR review (gitclaw runtime)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-structure.mjs",
+    "validate:gitagent": "gitagent validate",
+    "info": "gitagent info",
+    "export:prompt": "gitagent export -f system-prompt",
+    "heuristics": "node scripts/local-heuristics.mjs",
+    "gitclaw:help": "dotenv -e .env -- gitclaw --help",
+    "demo": "node scripts/run-demo.mjs"
+  },
+  "devDependencies": {
+    "@open-gitagent/gitagent": "^0.1.8",
+    "dotenv-cli": "^8.0.0",
+    "gitclaw": "^1.1.8"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

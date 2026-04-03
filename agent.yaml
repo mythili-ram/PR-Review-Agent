@@ -1,0 +1,33 @@
+spec_version: "0.1.0"
+name: pr-review-agent
+version: 0.1.0
+description: Policy-aware pull-request review agent — security, tests, and team rules from a git-native definition
+author: hackathon
+license: MIT
+# gitclaw expects "provider:model" — see https://github.com/open-gitagent/gitclaw
+model:
+  preferred: anthropic:claude-sonnet-4-5-20250929
+  fallback:
+    - anthropic:claude-haiku-4-5-20251001
+    - openai:gpt-4.1
+  constraints:
+    temperature: 0.2
+    max_tokens: 8192
+    top_p: 0.9
+skills:
+  - ingest-pr
+  - summarize-diff
+  - security-pass
+  - tests-and-risk
+  - compose-review
+tools:
+  - read-diff-context
+  - write-review-artifact
+runtime:
+  max_turns: 24
+  timeout: 300
+tags:
+  - hackathon
+  - pr-review
+  - gitagent
+  - developer-tools

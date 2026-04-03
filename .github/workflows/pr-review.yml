@@ -1,0 +1,141 @@
+name: AI-Powered PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  heuristic-scan:
+    name: Fast Security Scan (Heuristics)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get PR diff
+        id: pr-diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git diff origin/${{ github.base_ref }}...HEAD > pr.patch
+
+      - name: Run heuristic security scan
+        id: scan
+        run: |
+          npm run heuristics -- pr.patch > heuristic-results.json
+          cat heuristic-results.json
+
+      - name: Upload scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: heuristic-scan-results
+          path: heuristic-results.json
+
+      - name: Check for critical issues
+        run: |
+          CRITICAL_COUNT=$(jq -r '.stats.critical // 0' heuristic-results.json)
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "::error::Found $CRITICAL_COUNT critical security issue(s)"
+            exit 1
+          fi
+
+  ai-review:
+    name: AI-Powered Deep Review (gitclaw)
+    runs-on: ubuntu-latest
+    needs: heuristic-scan
+    if: always() # Run even if heuristics fail, to provide full context
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get PR diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git diff origin/${{ github.base_ref }}...HEAD > pr.patch
+
+      - name: Download heuristic results
+        uses: actions/download-artifact@v4
+        with:
+          name: heuristic-scan-results
+
+      - name: Run AI review with gitclaw
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          npx gitclaw -d . -p "Review pr.patch per RULES.md. Heuristic scan results in heuristic-results.json for context." > REVIEW.md
+
+      - name: Post review as PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('REVIEW.md', 'utf8');
+
+            // Find existing bot comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('AI-Powered PR Review')
+            );
+
+            const body = `## 🤖 AI-Powered PR Review\n\n${review}\n\n---\n*Powered by [pr-review-agent](https://github.com/your-org/pr-review-agent) • Review ID: ${context.runId}*`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      - name: Upload full review
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-results
+          path: REVIEW.md
+
+      - name: Check review verdict
+        run: |
+          if grep -q "REQUEST_CHANGES" REVIEW.md; then
+            echo "::error::AI review recommends REQUEST_CHANGES - see comment for details"
+            exit 1
+          fi

@@ -1,0 +1,89 @@
+diff --git a/README.md b/README.md
+index 8888888..9999999 100644
+--- a/README.md
++++ b/README.md
+@@ -10,7 +10,19 @@ npm install
+ npm run validate
+ ```
+
+-### Run with gitclaw
++## Architecture
++
++This agent uses a pipeline architecture:
++
++1. **ingest-pr**: Normalizes PR input (diff, metadata)
++2. **summarize-diff**: Creates human-readable summary
++3. **security-pass**: Scans for OWASP Top 10 vulnerabilities
++4. **tests-and-risk**: Evaluates test coverage and risk
++5. **compose-review**: Merges findings into final review
++
++Each skill is focused and composable, following the GitAgent specification.
++
++## Usage with gitclaw
+
+ `agent.yaml` uses **provider:model** ids (e.g. `anthropic:claude-sonnet-4-5-20250929`) as required by [gitclaw](https://github.com/open-gitagent/gitclaw).
+
+@@ -25,6 +37,14 @@ npm run gitclaw:help
+
+ **Do not commit `.env` or paste API keys into the README or issues.** If a key was ever exposed, revoke it in the console and create a new one.
+
++## Skills
++
++- **ingest-pr**: Parses and normalizes PR diffs
++- **summarize-diff**: Generates change summary
++- **security-pass**: OWASP Top 10 + CWE security checks
++- **tests-and-risk**: Test coverage analysis
++- **compose-review**: Final review composition
++
+ ## Repository layout
+
+ | Path | Purpose |
+diff --git a/docs/ARCHITECTURE.md b/docs/ARCHITECTURE.md
+new file mode 100644
+index 0000000..aaaaaaa
+--- /dev/null
++++ b/docs/ARCHITECTURE.md
+@@ -0,0 +1,43 @@
++# Architecture
++
++## Design Principles
++
++1. **Skill Isolation**: Each skill does one job well
++2. **Composability**: Skills can be reordered or replaced
++3. **Knowledge-Driven**: Security patterns and rubrics are versioned in git
++4. **Dual Analysis**: Heuristics (fast, offline) + LLM (contextual, deep)
++
++## Pipeline Flow
++
++```
++User Input (PR diff)
++  ↓
++[ingest-pr] → Parse and normalize
++  ↓
++[summarize-diff] → High-level summary
++  ↓
++[security-pass] → Security scan (OWASP, CWE)
++  ↓
++[tests-and-risk] → Test coverage analysis
++  ↓
++[compose-review] → Final verdict + recommendations
++  ↓
++Output (Markdown + JSON)
++```
++
++## Tools
++
++- **read-diff-context**: Parses unified diffs
++- **write-review-artifact**: Writes final review files
++
++## Knowledge Base
++
++- `security-patterns.md`: OWASP Top 10, CWE mappings, framework checks
++- `review-rubric.md`: Blocking vs non-blocking criteria
++
++## Extensibility
++
++To add custom rules:
++1. Update `knowledge/security-patterns.md` with new patterns
++2. Add corresponding checks to `scripts/local-heuristics.mjs` (optional)
++3. Skills will automatically incorporate new knowledge

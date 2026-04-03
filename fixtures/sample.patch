@@ -1,0 +1,25 @@
+diff --git a/src/config.ts b/src/config.ts
+index 1111111..2222222 100644
+--- a/src/config.ts
++++ b/src/config.ts
+@@ -1,5 +1,7 @@
+ export const appName = "demo";
++// TODO: rotate — exposed for hackathon fixture only
++export const apiKey = "sk-demo-replace-me-in-production";
+ 
+ export function loadConfig() {
+-  return { appName };
++  return { appName, apiKey };
+ }
+diff --git a/src/api/user.ts b/src/api/user.ts
+new file mode 100644
+index 0000000..3333333
+--- /dev/null
++++ b/src/api/user.ts
+@@ -0,0 +1,8 @@
++import { db } from "../db";
++
++export async function getUser(id: string) {
++  const q = `SELECT * FROM users WHERE id = '${id}'`;
++  return db.query(q);
++}

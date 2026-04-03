@@ -1,0 +1,26 @@
+name: read-diff-context
+description: Read unified diff and optional file context for PR review
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    diff_text:
+      type: string
+      description: Unified diff or patch content
+    repo_root:
+      type: string
+      description: Optional filesystem root for resolving paths
+  required: [diff_text]
+output_schema:
+  type: object
+  properties:
+    files:
+      type: array
+      items:
+        type: object
+        properties:
+          path: { type: string }
+          hunks: { type: integer }
+annotations:
+  read_only: true
+  requires_confirmation: false

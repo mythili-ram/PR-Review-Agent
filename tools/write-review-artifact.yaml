@@ -1,0 +1,26 @@
+name: write-review-artifact
+description: Write composed review to Markdown and optional JSON path
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    markdown_body:
+      type: string
+    json_body:
+      type: string
+    out_md:
+      type: string
+      description: Output path for REVIEW.md
+    out_json:
+      type: string
+      description: Output path for review.json
+  required: [markdown_body]
+output_schema:
+  type: object
+  properties:
+    written:
+      type: array
+      items: { type: string }
+annotations:
+  requires_confirmation: true
+  read_only: false
