@@ -10,22 +10,10 @@
     "info": "gitagent info",
     "export:prompt": "gitagent export -f system-prompt",
     "heuristics": "node scripts/local-heuristics.mjs",
-    "gitclaw:help": "dotenv -e .env -- gitclaw --help",
-    "demo": "node scripts/run-demo.mjs",
-    "review:claude": "node scripts/run-provider-review.mjs claude",
-    "review:gpt": "node scripts/run-provider-review.mjs gpt",
-    "review:gemini": "node scripts/run-provider-review.mjs gemini",
-    "review:auto": "node scripts/run-provider-review.mjs",
-    "dashboard": "node scripts/dashboard-server.mjs",
-    "ml:analyze": "node scripts/ml-anomaly-detection.mjs"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
+    "demo": "node scripts/run-demo.mjs"
   },
   "optionalDependencies": {
-    "@anthropic-ai/sdk": "^0.28.0",
-    "openai": "^4.82.0",
-    "@google/generative-ai": "^0.21.0"
+    "@anthropic-ai/sdk": "^0.28.0"
   },
   "devDependencies": {
     "@open-gitagent/gitagent": "^0.1.8",
