@@ -37,7 +37,7 @@ jobs:
       - name: Run heuristic security scan
         id: scan
         run: |
-          npm run heuristics -- pr.patch > heuristic-results.json
+          npm run --silent heuristics -- pr.patch > heuristic-results.json
           cat heuristic-results.json
 
       - name: Upload scan results
