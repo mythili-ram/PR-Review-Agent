@@ -51,7 +51,12 @@ jobs:
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "📦 Fixture: ${{ matrix.fixture }}"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          jq -r '"🔴 Critical: \(.stats.critical // 0)\n🟡 Warnings: \(.stats.warning // 0)\n📋 Verdict: \(.verdict // \"UNKNOWN\")"' results-${{ matrix.fixture }}.json
+          CRITICAL=$(jq -r '.stats.critical // 0' results-${{ matrix.fixture }}.json)
+          WARNING=$(jq -r '.stats.warning // 0' results-${{ matrix.fixture }}.json)
+          VERDICT=$(jq -r '.verdict // "UNKNOWN"' results-${{ matrix.fixture }}.json)
+          echo "🔴 Critical: $CRITICAL"
+          echo "🟡 Warnings: $WARNING"
+          echo "📋 Verdict: $VERDICT"
 
       - name: 📤 Upload Results
         uses: actions/upload-artifact@v4
