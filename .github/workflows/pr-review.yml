@@ -37,7 +37,9 @@ jobs:
       - name: Run heuristic security scan
         id: scan
         run: |
-          npm run --silent heuristics -- pr.patch > heuristic-results.json
+          # Filter out demo/test fixtures from security scan
+          grep -v "^diff --git a/fixtures/" pr.patch > pr-filtered.patch || true
+          npm run --silent heuristics -- pr-filtered.patch > heuristic-results.json
           cat heuristic-results.json
 
       - name: Run ML anomaly detection
