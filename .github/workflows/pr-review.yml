@@ -87,6 +87,7 @@ jobs:
       - name: Run AI review with gitclaw
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NO_COLOR: 1
         run: |
           npx gitclaw -d . -p "Review pr.patch per RULES.md. Heuristic scan results in heuristic-results.json for context." > REVIEW.md
 
