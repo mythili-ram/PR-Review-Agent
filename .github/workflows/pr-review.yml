@@ -40,11 +40,19 @@ jobs:
           npm run --silent heuristics -- pr.patch > heuristic-results.json
           cat heuristic-results.json
 
+      - name: Run ML anomaly detection
+        id: ml-analysis
+        run: |
+          npm run ml:analyze -- pr.patch > ml-anomalies.json 2>&1 || echo '{"files": [], "summary": {"total": 0}}'
+          cat ml-anomalies.json
+
       - name: Upload scan results
         uses: actions/upload-artifact@v4
         with:
           name: heuristic-scan-results
-          path: heuristic-results.json
+          path: |
+            heuristic-results.json
+            ml-anomalies.json
 
       - name: Check for critical issues
         run: |
