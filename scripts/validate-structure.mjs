@@ -24,7 +24,7 @@ const skillNames = [];
 const skillsSection = agentYaml.match(/skills:\s*\n([\s\S]*?)(?=\ntools:|\nruntime:|\n[a-z_]+:)/);
 const block = skillsSection ? skillsSection[1] : "";
 for (const line of block.split("\n")) {
-  const m = /^\s*-\s+([a-z0-9-]+)\s*$/.exec(line);
+  const m = /^\s*-\s+([a-z0-9-]+)/.exec(line);
   if (m) skillNames.push(m[1]);
 }
 
@@ -42,7 +42,7 @@ const toolNames = [];
 const toolsBlock = agentYaml.match(/tools:\s*\n([\s\S]*?)(?=\nruntime:|\n[a-z_]+:|\n*$)/);
 if (toolsBlock) {
   for (const line of toolsBlock[1].split("\n")) {
-    const m = /^\s*-\s+([a-z0-9-]+)\s*$/.exec(line);
+    const m = /^\s*-\s+([a-z0-9-]+)/.exec(line);
     if (m) toolNames.push(m[1]);
   }
 }
