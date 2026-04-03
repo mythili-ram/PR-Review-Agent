@@ -37,7 +37,7 @@ jobs:
       - name: Run heuristic security scan
         id: scan
         run: |
-          npm run heuristics -- pr.patch > heuristic-results.json
+          npm run --silent heuristics -- pr.patch > heuristic-results.json
           cat heuristic-results.json
 
       - name: Upload scan results
@@ -88,7 +88,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          npx gitclaw -d . -p "Review pr.patch per RULES.md. Heuristic scan results in heuristic-results.json for context." > REVIEW.md
+          npx gitclaw -d . -p "You are the pr-review-agent defined in this repository (SOUL.md, RULES.md, skills/). Read the PR diff in pr.patch and heuristic scan results in heuristic-results.json. Produce a pull request review with these sections: 1) Summary of what changed, 2) Security findings (cite rule_id or RULES.md where possible), 3) Test coverage / risk notes, 4) Verdict: REQUEST_CHANGES or COMMENT with justification. Follow RULES.md: never approve with unresolved critical security issues." | perl -pe 's/\e\[[0-9;]*[mG]//g' > REVIEW.md
 
       - name: Post review as PR comment
         uses: actions/github-script@v7
