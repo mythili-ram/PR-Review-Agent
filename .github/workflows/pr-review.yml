@@ -108,7 +108,7 @@ jobs:
               comment.body.includes('AI-Powered PR Review')
             );
 
-            const body = `## 🤖 AI-Powered PR Review\n\n${review}\n\n---\n*Powered by [pr-review-agent](https://github.com/your-org/pr-review-agent) • Review ID: ${context.runId}*`;
+            const body = `${review}\n\n---\n*Powered by [pr-review-agent](https://github.com/mythili-ram/PR-Review-Agent) • Review ID: ${context.runId}*`;
 
             if (botComment) {
               await github.rest.issues.updateComment({
@@ -132,9 +132,9 @@ jobs:
           name: ai-review-results
           path: REVIEW.md
 
-      - name: Check review verdict
+      - name: Block PR if critical issues found
         run: |
-          if grep -q "REQUEST_CHANGES" REVIEW.md; then
-            echo "::error::AI review recommends REQUEST_CHANGES - see comment for details"
+          if grep -q "CRITICAL" REVIEW.md; then
+            echo "::error::Critical security issues found - PR blocked until resolved. See review comment for details."
             exit 1
           fi
