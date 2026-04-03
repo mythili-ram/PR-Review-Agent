@@ -1,0 +1,41 @@
+
+> pr-review-agent@0.1.0 heuristics
+> node scripts/local-heuristics.mjs pr.patch
+
+{
+  "fixture": "pr.patch",
+  "verdict": "REQUEST_CHANGES",
+  "stats": {
+    "total": 3,
+    "critical": 2,
+    "warning": 0,
+    "suggestion": 1
+  },
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "rule_id": "secret-exposure",
+      "category": "A02:2021 - Cryptographic Failures",
+      "cwe": "CWE-798",
+      "message": "Hardcoded secret/credential detected — use env + secret manager."
+    },
+    {
+      "severity": "CRITICAL",
+      "rule_id": "sql-injection",
+      "category": "A03:2021 - Injection",
+      "cwe": "CWE-89",
+      "message": "SQL built with string concatenation or template literals — use parameterized queries or ORM."
+    },
+    {
+      "severity": "SUGGESTION",
+      "rule_id": "missing-input-validation",
+      "category": "A03:2021 - Injection",
+      "message": "User input used without visible validation — add input sanitization (express-validator, zod)."
+    }
+  ],
+  "metadata": {
+    "heuristic_version": "2.0.0",
+    "scanned_at": "2026-04-03T04:26:55.905Z",
+    "coverage": "OWASP Top 10 (2021), Common CWEs, Framework patterns"
+  }
+}
